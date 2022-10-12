@@ -1,0 +1,70 @@
+import random
+import string
+
+print("H A N G M A N\n")
+
+WordList = ["python", "java", "swift", "javascript"]
+
+Attempts = 8
+
+WinAmount = 0
+LossAmount = 0
+
+while True:
+    choice = input('Type "play" to play the game, "results" to show the scoreboard, and "exit" to quit:\n')
+    if choice == "play":
+        GuessList = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}
+        Word = random.choice(WordList)
+        Hint = Word[0:3]
+        Dash = ("-"*len(Word))
+
+        WordGuess = list(Dash)
+        WordCheck = list(Word)
+        print("\n" + Dash + "\nInput a letter: ")
+        while Attempts > 0:
+            guess = input()
+            answer = "".join(WordGuess)
+            finalAnswer = "".join(WordCheck)
+            if len(guess) != 1:
+                print("Please, input a single letter.\n\n" + answer+"\n\nInput a letter: ")
+            else:
+                if guess.isalpha():
+                    if guess.islower():
+                            if guess not in GuessList:
+                                print("You've already guessed this letter.\n \n" + answer+"\n\nInput a letter: ")
+                            else:
+                                GuessList.remove(guess)
+                                if guess in WordCheck:
+                                    for i in range(len(WordCheck)):
+                                        if WordCheck[i] == guess:
+                                            WordGuess[i] = guess
+                                            answer = "".join(WordGuess)
+                                    if answer == finalAnswer:
+                                        print(answer)
+                                        print("You guessed the word "+ answer +"!\nYou survived! \n")
+                                        WinAmount = WinAmount + 1
+                                        break
+                                    else:
+                                        print(answer)
+                                else:
+                                    print(answer + "\nThat letter doesn't appear in the word.\n")
+                                    Attempts = Attempts - 1
+                                if Attempts == 0:
+                                    print("\nYou lost!")
+                                    LossAmount = LossAmount + 1
+                                if Attempts >= 1:
+                                    print("Input a letter: \n")
+                                else:
+                                    pass
+                    else:
+                        print("Please, enter a lowercase letter from the English alphabet \n" + answer +"\n\nInput a letter: ")
+                else:
+                    print("Please, enter a lowercase letter from the English alphabet \n" + answer +"\n\nInput a letter: ")
+    elif choice == "results":
+        print("You won: " + str(WinAmount) + " times.")
+        print("You lost: " + str(LossAmount) + " times.\n")
+        continue
+    elif choice == "exit":
+        break
+    else:
+        input('Type "play" to play the game, "results" to show the scoreboard, and "exit" to quit:\n')
