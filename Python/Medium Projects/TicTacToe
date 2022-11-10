@@ -1,0 +1,92 @@
+GameBoard = []
+running = True
+turn_count = 1
+
+
+def SetStartingBoard():
+    i = 0
+    while i < 9:
+        GameBoard.append(" ")
+        i += 1
+
+
+def GetCoordinateInput():
+    global turn_count
+    player_move = input().split()
+    try:
+        row = int(player_move[0]) - 1
+        column = int(player_move[1]) - 1
+        if row > 2 or column > 2:
+            print("Coordinates should be from 1 to 3!")
+            GetCoordinateInput()
+        elif GameBoard[row][column] == "X" or GameBoard[row][column] == "O":
+            print("This cell is occupied! Choose another one")
+            GetCoordinateInput()
+        elif GameBoard[row][column] == " ":
+            if turn_count == 1 or turn_count % 2 == 1:
+                GameBoard[row][column] = "X"
+                turn_count += 1
+            else:
+                GameBoard[row][column] = "O"
+                turn_count += 1
+    except ValueError:
+        print("You should enter numbers!")
+        GetCoordinateInput()
+
+
+def ParseGameBoard():
+    global GameBoard
+    GameBoard = [GameBoard[i:i + 3] for i in range(0, len(GameBoard), 3)]
+    print(f"""---------
+| {GameBoard[0][0]} {GameBoard[0][1]} {GameBoard[0][2]} |
+| {GameBoard[1][0]} {GameBoard[1][1]} {GameBoard[1][2]} |
+| {GameBoard[2][0]} {GameBoard[2][1]} {GameBoard[2][2]} |
+---------""")
+
+
+def UpdateGameBoard():
+    global GameBoard
+    print(f"""---------
+| {GameBoard[0][0]} {GameBoard[0][1]} {GameBoard[0][2]} |
+| {GameBoard[1][0]} {GameBoard[1][1]} {GameBoard[1][2]} |
+| {GameBoard[2][0]} {GameBoard[2][1]} {GameBoard[2][2]} |
+---------""")
+
+
+def CheckForWin():
+    global GameBoard
+    global running
+    win_conditions = []
+    if GameBoard[0][0] == GameBoard[0][1] == GameBoard[0][2]:
+        win_conditions.append(GameBoard[0][0])
+    if GameBoard[1][0] == GameBoard[1][1] == GameBoard[1][2]:
+        win_conditions.append(GameBoard[1][0])
+    if GameBoard[2][0] == GameBoard[2][1] == GameBoard[2][2]:
+        win_conditions.append(GameBoard[2][0])
+    if GameBoard[0][0] == GameBoard[1][0] == GameBoard[2][0]:
+        win_conditions.append(GameBoard[0][0])
+    if GameBoard[0][1] == GameBoard[1][1] == GameBoard[2][1]:
+        win_conditions.append(GameBoard[0][1])
+    if GameBoard[0][2] == GameBoard[1][2] == GameBoard[2][2]:
+        win_conditions.append(GameBoard[0][2])
+    if GameBoard[0][0] == GameBoard[1][1] == GameBoard[2][2]:
+        win_conditions.append(GameBoard[0][0])
+    if GameBoard[0][2] == GameBoard[1][1] == GameBoard[2][0]:
+        win_conditions.append(GameBoard[0][2])
+    if len(win_conditions) == 0 and turn_count == 10:
+        print("Draw")
+        exit()
+    elif len(win_conditions) == 1:
+        if win_conditions[0] == " ":
+            win_conditions.clear()
+        else:
+            print(f"""{win_conditions[0]} wins!""")
+            exit()
+
+
+SetStartingBoard()
+ParseGameBoard()
+while running:
+    CheckForWin()
+    GetCoordinateInput()
+    UpdateGameBoard()
