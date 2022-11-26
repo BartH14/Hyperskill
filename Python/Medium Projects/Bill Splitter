@@ -1,0 +1,53 @@
+import random
+PartyGoers = {}
+
+
+def getpartygoers():
+    global PartyGoers
+    amount = int(input("Enter the number of friends joining (including you):\n"))
+    if amount <= 0:
+        print("No one is joining for the party")
+    else:
+        print("\nEnter the name of every friend (including you), each on a new line:")
+        inp_amount = 0
+        while inp_amount < amount:
+            name = input()
+            PartyGoers[name] = 0
+            inp_amount += 1
+        getbill()
+
+
+def getbill():
+    global PartyGoers
+    total = int(input("\nEnter the total bill value:\n"))
+    individual_bill = total / len(PartyGoers)
+    individual_bill = round(individual_bill, 2)
+    for i in PartyGoers:
+        PartyGoers[i] = individual_bill
+    getlucky()
+
+
+def getlucky():
+    choice = input('\nDo you want to use the "Who is lucky?" feature? Write Yes/No:\n')
+    if choice == 'Yes':
+        goerlist = [key for key in PartyGoers]
+        luckygoer = random.choice(goerlist)
+        print("\n{} is the lucky one!".format(luckygoer))
+        redistributemoney(luckygoer)
+    else:
+        print("\nNo one is going to be lucky")
+        print(PartyGoers)
+
+
+def redistributemoney(luckygoer):
+    global PartyGoers
+    surcharge = PartyGoers[luckygoer] / (len(PartyGoers)-1)
+    for key in PartyGoers:
+        if key != luckygoer:
+            PartyGoers[key] += surcharge
+        elif key == luckygoer:
+            PartyGoers[luckygoer] = 0
+    print(PartyGoers)
+
+
+getpartygoers()
