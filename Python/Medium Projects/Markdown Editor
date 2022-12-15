@@ -1,0 +1,123 @@
+markdowntext = []
+help_message = """\nThis program helps user to format text using markdown language.
+Supported formatters:
+- plain
+- bold
+- italic
+- link
+- inline-code
+- new-line
+- header
+- unordered-list
+- ordered-list
+Use command !done to finish formatting and save the result to a file output.md in the program directory.
+Use command !help to print this message.\n"""
+
+def gettext():
+    return input("Text: ")
+
+
+def plain():
+    return gettext()
+
+
+def bold():
+    return f"**{gettext()}**"
+
+
+def italic():
+    return f"*{gettext()}*"
+
+
+def link():
+    label = input("Label: ")
+    url = input("URL: ")
+    return f"[{label}]({url})"
+
+
+def inlinecode():
+    return f"`{gettext()}`"
+
+
+def newline():
+    return "\n"
+
+
+def header():
+    level = int(input("Level: "))
+    text = ""
+
+    while level < 1 or level > 6:
+        print("The level should be within the range of 1 to 6")
+        level = int(input("Level: "))
+    text = input("Text: ")
+    return f"{'#' * level} {text}\n"
+
+
+def create_list():
+    items = 0
+    current_row = 1
+    unordered_list = []
+
+    while items < 1:
+        items = int(input("Number of rows: "))
+        if items < 1:
+            print("The number of rows should be greater than zero")
+
+    while current_row < (items + 1):
+        text = input(f"Row #{current_row}: ")
+        unordered_list.append(f"* {text}\n")
+        current_row += 1
+    return "".join(unordered_list)
+
+
+def ordered_list():
+    items = 0
+    current_row = 1
+    order_list = []
+
+    while items < 1:
+        items = int(input("Number of rows: "))
+        if items < 1:
+            print("The number of rows should be greater than zero")
+
+    while current_row < (items + 1):
+        text = input(f"Row #{current_row}: ")
+        order_list.append(f"{current_row}. {text}\n")
+        current_row += 1
+    return "".join(order_list)
+
+
+formatters = {"plain": plain,
+              "bold": bold,
+              "italic": italic,
+              "link": link,
+              "inline-code": inlinecode,
+              "new-line": newline,
+              "header": header,
+              "unordered-list": create_list,
+              "ordered-list": ordered_list}
+
+
+while True:
+    choice = input("Choose a formatter: ")
+
+    if choice == '!done':
+        try:
+            file = open("output.md", "w")
+
+            for line in markdowntext:
+                file.write(line)
+            file.close()
+        except FileExistsError:
+            print("Failed to save file")
+        quit()
+
+    elif choice == '!help':
+        print(help_message)
+    elif choice not in formatters:
+        print("Unknown formatter of command. Please try again.")
+    else:
+        markdowntext.append(formatters[choice]())
+        string = ""
+        print(string.join(markdowntext))
